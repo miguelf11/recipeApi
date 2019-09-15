@@ -2,14 +2,25 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Request;
+use App\Domain\Services\RecipeService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RecipeController
 {
-    const API_URL = 'http://www.recipepuppy.com/api';
+    /**
+     * @var RecipeService
+     */
+    private $recipeService;
+
+    /**
+     * @param RecipeService $votingService
+     */
+    public function __construct(RecipeService $recipeService)
+    {
+        $this->recipeService = $recipeService;
+    }
 
     /**
      * @Route("/recipe/", name="get_recipe")
@@ -20,15 +31,8 @@ class RecipeController
      */
     public function get(Request $request)
     {
-        $client = new Client();
+        $query = $request->query->get('q');
 
-        $queryParams = ['query' => ['q' => $request->query->get('q')]];
-        $res = $client->request('GET', self::API_URL, $queryParams);
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $res = json_decode($res->getBody());
-
-        return $response->setContent(json_encode($res->results), true);
+        return new JsonResponse($this->recipeService->search($query));
     }
 }
