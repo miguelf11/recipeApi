@@ -4,26 +4,28 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use App\Domain\Services\RecipeService;
+use App\Domain\Services\CategoryService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class RecipeController
+class CategoryController
 {
     /**
-     * @var RecipeService
+     * @var CategoryService
      */
-    private $recipeService;
+    private $categoryService;
 
     /**
-     * @param RecipeService $votingService
+     * @param CategoryService $votingService
      */
-    public function __construct(RecipeService $recipeService)
+    public function __construct(CategoryService $categoryService)
     {
-        $this->recipeService = $recipeService;
+        $this->categoryService = $categoryService;
     }
 
     /**
-     * @Route("/recipe/", name="get_recipe")
+     * Find the recipes in a category.
+     *
+     * @Route("/category/", name="recipes_in_category")
      *
      * @param Symfony\Component\HttpFoundation\Request $request
      *
@@ -33,6 +35,6 @@ class RecipeController
     {
         $query = $request->query->get('q');
 
-        return new JsonResponse($this->recipeService->search($query));
+        return new JsonResponse($this->categoryService->search($query));
     }
 }
