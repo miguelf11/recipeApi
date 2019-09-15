@@ -4,7 +4,7 @@ namespace App\Domain\Services;
 
 use App\Domain\Repository\RecipeRepositoryInterface;
 
-class RecipeService
+class CategoryService
 {
     private $recipeRepository;
 
